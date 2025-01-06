@@ -11,6 +11,7 @@ const parser = new Parser();
 const app = express();
 const port = process.env.PORT;
 const baseUrl = "https://" + process.env.CALLBACK_IP;
+const hubCallback = `${baseUrl}/youtube/notifications`;
 
 let channelId = process.env.CHANNEL_ID;
 
@@ -21,8 +22,10 @@ const agent = new AtpAgent({
       }    
 })
 
+console.log('Starting YouTube Notifier on port ' + port);
+
 export const notifier = new YouTubeNotifier({
-    hubCallback: `${baseUrl}/youtube/notifications`,
+    hubCallback: hubCallback,
     port: port
 });
 
