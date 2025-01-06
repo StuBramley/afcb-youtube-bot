@@ -71,6 +71,7 @@ exports.notifier.on('subscribe', (data) => {
 });
 exports.notifier.on('notified', (data) => {
     console.log('New Video');
+    console.log(data);
     processVideo(data);
 });
 function processVideo(data) {

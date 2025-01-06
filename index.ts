@@ -44,6 +44,7 @@ notifier.on('subscribe', (data: string) => {
 
 notifier.on('notified', (data: string) => {
     console.log('New Video');
+    console.log(data);
     processVideo(data);
 });
 
