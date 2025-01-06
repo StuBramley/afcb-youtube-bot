@@ -75,7 +75,7 @@ function postToBlueSky(videoUrl, createdAt) {
         }
         var postRecord = {
             $type: 'app.bsky.feed.post',
-            text: '#afcb ${videoUrl}',
+            text: `#afcb ${videoUrl}`,
             createdAt: createdAt
         };
         console.log('agent posting ' + videoUrl);

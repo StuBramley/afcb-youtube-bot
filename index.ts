@@ -70,7 +70,7 @@ async function postToBlueSky(videoUrl: string, createdAt : string){
   
     var postRecord = {
         $type: 'app.bsky.feed.post',
-        text: '#afcb ${videoUrl}',
+        text: `#afcb ${videoUrl}`,
         createdAt: createdAt
     }
 
