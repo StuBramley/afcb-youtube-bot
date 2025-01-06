@@ -10,7 +10,7 @@ const Parser = require('rss-parser');
 const parser = new Parser();  
 const app = express();
 const port = process.env.PORT;
-const baseUrl = "https://" + process.env.CALLBACK_IP;
+const baseUrl = "http://" + process.env.CALLBACK_IP;
 const hubCallback = `${baseUrl}/youtube/notifications`;
 
 let channelId = process.env.CHANNEL_ID;
