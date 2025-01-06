@@ -74,9 +74,9 @@ exports.notifier.on('notified', (data) => {
     console.log(data);
     processVideo(data);
 });
-function processVideo(data) {
+function processVideo(videoObj) {
     return __awaiter(this, void 0, void 0, function* () {
-        const videoObj = JSON.parse(data);
+        //    const videoObj = JSON.parse(data);
         const videoUrl = videoObj.video.link;
         console.log('Video URL: ' + videoUrl);
         yield postToBlueSky(videoUrl, videoObj.published);

@@ -42,14 +42,14 @@ notifier.on('subscribe', (data: string) => {
     console.log(data);
 });
 
-notifier.on('notified', (data: string) => {
+notifier.on('notified', (data: any) => {
     console.log('New Video');
     console.log(data);
     processVideo(data);
 });
 
-async function processVideo(data: string){
-    const videoObj = JSON.parse(data);
+async function processVideo(videoObj: any){
+//    const videoObj = JSON.parse(data);
     const videoUrl = videoObj.video.link;
     console.log('Video URL: ' + videoUrl);
     await postToBlueSky(videoUrl, videoObj.published);
