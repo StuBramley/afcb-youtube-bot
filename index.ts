@@ -22,7 +22,7 @@ const agent = new AtpAgent({
       }    
 })
 
-console.log('Starting YouTube Notifier on port ' + port);
+console.log('Starting YouTube Notifier on url:port ' + hubCallback + ':' + port);
 
 export const notifier = new YouTubeNotifier({
     hubCallback: hubCallback,
