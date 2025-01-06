@@ -79,7 +79,7 @@ function processVideo(videoObj) {
         //    const videoObj = JSON.parse(data);
         const videoUrl = videoObj.video.link;
         console.log('Video URL: ' + videoUrl);
-        yield postToBlueSky(videoUrl, videoObj.published);
+        yield postToBlueSky(videoUrl, videoObj.published.toISOString());
     });
 }
 function postToBlueSky(videoUrl, createdAt) {

@@ -52,7 +52,7 @@ async function processVideo(videoObj: any){
 //    const videoObj = JSON.parse(data);
     const videoUrl = videoObj.video.link;
     console.log('Video URL: ' + videoUrl);
-    await postToBlueSky(videoUrl, videoObj.published);
+    await postToBlueSky(videoUrl, videoObj.published.toISOString());
 }
 
 async function postToBlueSky(videoUrl: string, createdAt : string){
