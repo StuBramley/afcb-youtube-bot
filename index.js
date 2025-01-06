@@ -46,7 +46,7 @@ const Parser = require('rss-parser');
 const parser = new Parser();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
-const baseUrl = "http://" + process.env.CALLBACK_IP;
+const baseUrl = "http://" + process.env.CALLBACK_IP + ":" + port;
 const hubCallback = `${baseUrl}/youtube/notifications`;
 let channelId = process.env.CHANNEL_ID;
 const agent = new api_1.default({
@@ -55,10 +55,10 @@ const agent = new api_1.default({
         session = sess !== null && sess !== void 0 ? sess : null;
     }
 });
-console.log('Starting YouTube Notifier on url:port ' + hubCallback + ':' + port);
+console.log('Starting YouTube Notifier on url ' + hubCallback);
 exports.notifier = new YouTubeNotifier({
     hubCallback: hubCallback,
-    port: port
+    middleware: true
 });
 app.use("/youtube/notifications", exports.notifier.listener());
 app.listen(port, () => {

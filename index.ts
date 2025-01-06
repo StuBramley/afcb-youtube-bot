@@ -10,7 +10,7 @@ const Parser = require('rss-parser');
 const parser = new Parser();  
 const app = express();
 const port = process.env.PORT;
-const baseUrl = "http://" + process.env.CALLBACK_IP;
+const baseUrl = "http://" + process.env.CALLBACK_IP + ":" + port;
 const hubCallback = `${baseUrl}/youtube/notifications`;
 
 let channelId = process.env.CHANNEL_ID;
@@ -22,11 +22,11 @@ const agent = new AtpAgent({
       }    
 })
 
-console.log('Starting YouTube Notifier on url:port ' + hubCallback + ':' + port);
+console.log('Starting YouTube Notifier on url ' + hubCallback);
 
 export const notifier = new YouTubeNotifier({
     hubCallback: hubCallback,
-    port: port
+    middleware: true
 });
 
 app.use("/youtube/notifications", notifier.listener());
