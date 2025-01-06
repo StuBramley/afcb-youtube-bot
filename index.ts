@@ -68,18 +68,12 @@ async function postToBlueSky(videoUrl: string, createdAt : string){
       await agent.resumeSession(session);
     }
   
-    const rt = new RichText({
-        text:  videoUrl
-    });
-
     var postRecord = {
         $type: 'app.bsky.feed.post',
-        text: rt.text,
-        facets: rt.facets,
+        text: videoUrl,
         createdAt: createdAt
     }
 
-    await rt.detectFacets(agent);
     console.log('agent posting ' + videoUrl);
     await agent.post(postRecord)
 }
