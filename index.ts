@@ -49,10 +49,10 @@ notifier.on('notified', (data: string) => {
 });
 
 async function processVideo(data: string){
-    const feed = await parser.parseString(data);
-    const videoUrl = feed.items[0].link;
+    const videoObj = JSON.parse(data);
+    const videoUrl = videoObj.video.link;
     console.log('Video URL: ' + videoUrl);
-    await postToBlueSky(videoUrl, feed.items[0].isoDate);
+    await postToBlueSky(videoUrl, videoObj.published);
 }
 
 async function postToBlueSky(videoUrl: string, createdAt : string){

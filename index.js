@@ -76,10 +76,10 @@ exports.notifier.on('notified', (data) => {
 });
 function processVideo(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        const feed = yield parser.parseString(data);
-        const videoUrl = feed.items[0].link;
+        const videoObj = JSON.parse(data);
+        const videoUrl = videoObj.video.link;
         console.log('Video URL: ' + videoUrl);
-        yield postToBlueSky(videoUrl, feed.items[0].isoDate);
+        yield postToBlueSky(videoUrl, videoObj.published);
     });
 }
 function postToBlueSky(videoUrl, createdAt) {
