@@ -16,6 +16,7 @@ exports.notifier = void 0;
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const api_1 = __importDefault(require("@atproto/api"));
+const axios_1 = __importDefault(require("axios"));
 dotenv_1.default.config();
 var session = null;
 const YouTubeNotifier = require('youtube-notification');
@@ -53,14 +54,6 @@ exports.notifier.on('notified', (data) => {
 });
 function processVideo(videoObj) {
     return __awaiter(this, void 0, void 0, function* () {
-        //    const videoObj = JSON.parse(data);
-        const videoUrl = videoObj.video.link;
-        console.log('Video URL: ' + videoUrl);
-        yield postToBlueSky(videoUrl, videoObj.published.toISOString());
-    });
-}
-function postToBlueSky(videoUrl, createdAt) {
-    return __awaiter(this, void 0, void 0, function* () {
         // login or refresh session  
         if (session === null) {
             console.log('Logging in');
@@ -73,12 +66,92 @@ function postToBlueSky(videoUrl, createdAt) {
             console.log('Refreshing session');
             yield agent.resumeSession(session);
         }
+        const videoUrl = videoObj.video.link;
+        console.log('Video URL: ' + videoUrl);
+        const cardobj = yield getCardData(videoUrl);
+        yield postToBlueSky(videoObj, cardobj);
+    });
+}
+function getCardData(videoUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const baseCardyUrl = 'https://cardyb.bsky.app/v1/extract?';
+        const cardyUrl = baseCardyUrl + 'url=' + encodeURIComponent(videoUrl);
+        const response = yield axios_1.default.get(cardyUrl)
+            .catch((error) => {
+            console.log(error.message);
+        });
+        if (response) {
+            let cardObj = response.data;
+            const buffer = yield downloadImage(cardObj.image);
+            console.log('Uploading ... ');
+            const { data } = yield agent.uploadBlob(buffer);
+            cardObj.thumb = data.blob.original;
+            return cardObj;
+        }
+        ;
+    });
+}
+function downloadImage(url) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield (0, axios_1.default)({
+            url,
+            method: 'GET',
+            responseType: 'arraybuffer'
+        }).catch((error) => {
+            console.log(error.message);
+        });
+        if (response) {
+            console.log('response received from url ' + url);
+            const buffer = Buffer.from(response.data, 'binary');
+            return buffer;
+        }
+    });
+}
+function postToBlueSky(videoObj, cardobj) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const videoUrl = videoObj.video.link;
+        const createdAt = videoObj.published.toISOString();
         var postRecord = {
             $type: 'app.bsky.feed.post',
             text: `#afcb ${videoUrl}`,
-            createdAt: createdAt
+            createdAt: createdAt,
+            embed: {}
         };
+        var embed = {
+            "$type": "app.bsky.embed.external#main",
+            'external': {
+                "$type": "app.bsky.embed.external#external",
+                "uri": videoUrl,
+                "title": videoObj.video.title,
+                "description": cardobj.description,
+                "thumb": cardobj.thumb
+            }
+        };
+        postRecord.embed = embed;
         console.log('agent posting ' + videoUrl);
-        yield agent.post(postRecord);
+        yield agent.post(postRecord).catch((error) => {
+            console.log(error.message);
+        });
     });
+}
+function testPostVideo() {
+    return __awaiter(this, void 0, void 0, function* () {
+        processVideo({
+            video: {
+                id: "Y84K8rzjWTo",
+                title: "Brooks bags SUBLIME strike to sink the Toffees | AFC Bournemouth 1-0 Everton",
+                link: "https://www.youtube.com/watch?v=Y84K8rzjWTo",
+            },
+            channel: {
+                id: "",
+                name: "",
+                link: "",
+            },
+            published: new Date(),
+            updated: new Date()
+        });
+    });
+}
+if (process.argv[2] == 'test') {
+    testPostVideo();
 }
