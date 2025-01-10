@@ -125,7 +125,7 @@ async function postToBlueSky(videoObj: any, cardobj: any){
 
     console.log('agent posting ' + videoUrl);
     await agent.post(postRecord).catch((error) => {
-        console.log(error.message); 
+        console.error(error.message); 
     });
 }
 

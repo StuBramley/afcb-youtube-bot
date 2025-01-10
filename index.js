@@ -130,7 +130,7 @@ function postToBlueSky(videoObj, cardobj) {
         postRecord.embed = embed;
         console.log('agent posting ' + videoUrl);
         yield agent.post(postRecord).catch((error) => {
-            console.log(error.message);
+            console.error(error.message);
         });
     });
 }
