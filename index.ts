@@ -103,10 +103,14 @@ async function postToBlueSky(videoObj: any, cardobj: any){
 
     const videoUrl: string = videoObj.video.link;
     const createdAt : string = videoObj.published.toISOString();
-
+    const rt = new RichText({        
+        text: `#afcb ${videoUrl}`,
+    });
+    await rt.detectFacets(agent) 
     var postRecord: any = {
         $type: 'app.bsky.feed.post',
-        text: `#afcb ${videoUrl}`,
+        text: rt.text,
+        facets: rt.facets,
         createdAt: createdAt,
         embed: {}
     }
